@@ -9,7 +9,7 @@ class ScriptArguments < Hash
         super()
 
         opt_parser = OptionParser.new do |opts|
-            opts.banner = 'Usage: fp_latex [options]'
+            opts.banner = "Usage: fp_latex [options] \n If options aren't covered, script will ask for variables"
 
             opts.on('-c COURSE', '--course', 'The course this assignment is for') do |course|
                 self[:course] = course
@@ -99,6 +99,7 @@ class LatexVariables
         text = File.read(@filename)
         new_text = text.gsub(/HOMEWORKTITLE/, @title).gsub(/DUEDATE/, @due_date).gsub(/COURSE/, @course).gsub(/PROFESSOR/, @professor).gsub(/AUTHOR/,@author)
         File.write(@filename, new_text)
+        system "latex #{@filename}"
     end
 
 end
