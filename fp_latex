@@ -106,3 +106,5 @@ end
 
 latex_variables = LatexVariables.new(arguments)
 latex_variables.execute
+
+system "pdflatex #{@filename}"
