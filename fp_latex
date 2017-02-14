@@ -100,6 +100,7 @@ class LatexVariables
         new_text = text.gsub(/HOMEWORKTITLE/, @title).gsub(/DUEDATE/, @due_date).gsub(/COURSE/, @course).gsub(/PROFESSOR/, @professor).gsub(/AUTHOR/,@author)
         File.write(@filename, new_text)
         system "latex #{@filename}"
+		system "pdflatex #{@filename}"
     end
 
 end
@@ -107,4 +108,3 @@ end
 latex_variables = LatexVariables.new(arguments)
 latex_variables.execute
 
-system "pdflatex #{@filename}"
