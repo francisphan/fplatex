@@ -8,10 +8,10 @@ I swear submitting homework formatted by latex helps me get more points when the
 ### Dependencies
 Currently known to work with ruby-2.2.4
 
-'require \"highline/import\"'
+`require "highline/import"`
 
 ## Usage
-'''
+```
 Usage: fp_latex [options]
  If options aren't covered, script will ask for variables.
     -c, --course COURSE              The course this assignment is for
@@ -24,6 +24,6 @@ Usage: fp_latex [options]
     -e, --environment PRESET         After choosing a yaml file, you must choose a preset set of variables. This is so you should only need one yaml file with all your variables and presets. Variables passed by flags override arguments from yaml file.
     -b, --build-executable           Will create symlink for this file to /usr/bin so you can use script from any location. If this flag is passed, all other flags are ignored.
     -h, --help                       Display this help and exit
-'''
+```
 
-To set up this executable run 'ruby fplatex -b', this will create a symlink in /usr/local/bin for you to use anywhere
+To set up this executable run `ruby fplatex -b`, this will create a symlink in /usr/local/bin for you to use anywhere
