@@ -18,9 +18,14 @@ Usage: fplatex [options]
     -d, --due-date DUEDATE           Due date of assignment
     -p, --professor PROFESSOR        The professor for the course
     -f, --filename FILENAME          Desired filename of latex file, appends '.tex' to whatever the input is
-    -y, --yaml-file YAMLFILE         Load a yaml file with all the variables set already. Must indicate which hash to use. For any missing variables, this script will ask for them if not specified by other flags.
-    -e, --environment PRESET         After choosing a yaml file, you must choose a preset set of variables. This is so you should only need one yaml file with all your variables and presets. Variables passed by flags override arguments from yaml file.
-    -b, --build-executable           Will create symlink for this file to /usr/bin so you can use script from any location. If this flag is passed, all other flags are ignored.
+    -y, --yaml-file YAMLFILE         Input the path to a yaml file. Load a yaml file with all the variables set already. 
+                                     Must indicate which hash to use. For any missing variables,
+                                     this script will ask for them if not specified by other flags.
+    -e, --environment PRESET         After choosing a yaml file, you must choose a preset set of variables.
+                                     This is so you should only need one yaml file with all your variables and presets.
+                                     Variables passed by flags override arguments from yaml file.
+    -b, --build-executable           Will create symlink for this file to /usr/bin so you can use script from any location.
+                                     If this flag is passed, all other flags are ignored.
     -h, --help                       Display this help and exit
 ```
 
