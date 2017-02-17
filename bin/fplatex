@@ -65,7 +65,7 @@ arguments = ScriptArguments.new(ARGV)
 class LatexVariables
     def initialize(args)
         @repo_path = File.dirname((File.symlink?(__FILE__) ? File.readlink(__FILE__) : File.absolute_path(__FILE__)))
-        if args[:build]
+        if args[:build] && !(system "which fplatex")
           system "ln -s #{@repo_path}/fplatex /usr/local/bin/fplatex"
           exit
         end

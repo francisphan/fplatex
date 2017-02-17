@@ -5,10 +5,8 @@ This is a project to speed up the work flow of homework.
 By using the ruby script it will setup the template of the more important fields.
 I swear submitting homework formatted by latex helps me get more points when they're graded.
 
-### Dependencies
-Currently known to work with ruby-2.2.4
-
-`require "highline/import"`
+## Setup
+`gem install fplatex`
 
 ## Usage
 ```
@@ -26,4 +24,4 @@ Usage: fplatex [options]
     -h, --help                       Display this help and exit
 ```
 
-To set up this executable run `ruby fplatex -b`, this will create a symlink in /usr/local/bin for you to use anywhere
+If you download this repo directly instead of from [RubyGems](https://rubygems.org/gems/fplatex) set up this executable run `ruby bin/fplatex -b`, this will create a symlink in /usr/local/bin for you to use anywhere
