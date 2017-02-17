@@ -64,7 +64,7 @@ arguments = ScriptArguments.new(ARGV)
 
 class LatexVariables
     def initialize(args)
-        @repo_path = File.dirname((File.symlink?(__FILE__) ? File.readlink(__FILE__) : File.absolute_path(__FILE__)))
+        @repo_path = File.dirnam(File.dirname((File.symlink?(__FILE__) ? File.readlink(__FILE__) : File.absolute_path(__FILE__))))
         if args[:build] && !(system "which fplatex")
           system "ln -s #{@repo_path}/fplatex /usr/local/bin/fplatex"
           exit
@@ -90,12 +90,12 @@ class LatexVariables
                 confirm = ask("File named #{@filename} already exists, overwrite? [Y/N] ") { |yn| yn.limit = 1, yn.validate = /[yn]/i }
                 exit unless confirm.downcase == 'y'
             else
-                system "cp #{@repo_path}/latex_hw_template.tex #{@filename}"
+                system "cp #{@repo_path}/lib/latex_hw_template.tex #{@filename}"
             end
         elsif !@course
             filename = ask("What would you like to name this latex file?")
             @filename = parse_filename(filename)
-            system "cp #{@repo_path}/latex_hw_template.tex #{@filename}"
+            system "cp #{@repo_path}/lib/latex_hw_template.tex #{@filename}"
         end
         if args[:course]
             @course = args[:course]
