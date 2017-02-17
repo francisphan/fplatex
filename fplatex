@@ -129,9 +129,9 @@ class LatexVariables
       if filename.nil? or filename.empty?
         "latex_hw_template.tex"
       elsif (filename =~ /^*\.$/i).nil?
-        filename + "tex"
-      elsif (filename =~ /^*\.$/i).nil?
         filename + ".tex"
+      elsif (filename =~ /^*\.$/i)
+        filename + "tex"
       else
         filename
       end

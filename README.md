@@ -12,7 +12,7 @@ Currently known to work with ruby-2.2.4
 
 ## Usage
 ```
-Usage: fp_latex [options]
+Usage: fplatex [options]
  If options aren't covered, script will ask for variables.
     -c, --course COURSE              The course this assignment is for
     -a, --author AUTHOR              Your name
