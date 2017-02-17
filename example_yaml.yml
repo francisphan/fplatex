@@ -1,0 +1,14 @@
+# Both examples work
+# Partial example
+foo:
+  course: bar
+  author: Francis Phan
+  professor: Professor Foo
+# Complete example
+monty:
+  course: python
+  author: Francis Phan
+  professor: Professor FizzBuzz
+  title: Homework 3
+  duedate: Friday, February 17, 2017
+  filename: test.tex

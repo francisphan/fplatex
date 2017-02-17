@@ -1,0 +1,151 @@
+#!/usr/bin/env ruby
+
+require 'optparse'
+require 'highline/import'
+require 'yaml'
+
+class ScriptArguments < Hash
+    def initialize(args)
+        super()
+
+        opt_parser = OptionParser.new do |opts|
+            opts.banner = "Usage: fp_latex [options] \n If options aren't covered, script will ask for variables."
+
+            opts.on('-c COURSE', '--course', 'The course this assignment is for') do |course|
+                self[:course] = course
+            end
+
+            opts.on('-a AUTHOR', '--author', 'Your name') do |author|
+                self[:author] = author
+            end
+
+            opts.on('-t TITLE', '--title', 'Homework Assignment Name') do |title|
+                self[:title] = title
+            end
+
+            opts.on('-d DUEDATE', '--due-date', 'Due date of assignment') do |due_date|
+                self[:due_date] = due_date
+            end
+
+            opts.on('-p PROFESSOR', '--professor', 'The professor for the course') do |professor|
+                self[:professor] = professor
+            end
+
+            opts.on('-f FILENAME', '--filename', 'Desired filename of latex file, appends \'.tex\' to whatever the input is') do |filename|
+                self[:filename] = filename
+            end
+
+            opts.on('-y YAMLFILE', '--yaml-file',
+                    'Load a yaml file with all the variables set already. Must indicate which hash to use. For any missing variables, this script will ask for them if not specified by other flags.') do |yaml_file|
+              self[:yaml_file] = yaml_file
+            end
+
+            opts.on('-e PRESET', '--environment',
+                    'After choosing a yaml file, you must choose a preset set of variables. This is so you should only need one yaml file with all your variables and presets. Variables passed by flags override arguments from yaml file.') do |preset|
+              self[:preset] = preset
+            end
+
+            opts.on('-b', '--build-executable', 'Will create symlink for this file to /usr/bin so you can use script from any location. If this flag is passed, all other flags are ignored.') do
+              self[:build] = true
+            end
+
+            opts.on('-h', '--help', 'Display this help and exit') do
+                puts opts
+                exit
+            end
+        end
+
+        opt_parser.parse!(args)
+
+      end
+end
+
+arguments = ScriptArguments.new(ARGV)
+
+class LatexVariables
+    def initialize(args)
+        @repo_path = File.dirname((File.symlink?(__FILE__) ? File.readlink(__FILE__) : File.absolute_path(__FILE__)))
+        if args[:build]
+          system "ln -s #{@repo_path}/fplatex /usr/local/bin/fplatex"
+          exit
+        end
+        if args[:yaml_file]
+          config = YAML.load(File.new(args[:yaml_file]))
+          if args[:preset].nil? or config[args[:preset]].nil?
+            puts "If you're trying to use a YAML file to load variables you need to pass a valid preset hash as well."
+            exit
+          else
+            @filename = parse_filename(config[args[:preset]]['filename'])
+            @course = config[args[:preset]['course']]
+            @professor = config[args[:preset]['professor']]
+            @author = config[args[:preset]['author']]
+            @due_date = config[args[:preset]['duedate']]
+            @title = config[args[:preset]['title']]
+        end
+      end
+
+        if args[:filename]
+            @filename = parse_filename args[:filename]
+            if File.exists?(args[:filename])
+                confirm = ask("File named #{@filename} already exists, overwrite? [Y/N] ") { |yn| yn.limit = 1, yn.validate = /[yn]/i }
+                exit unless confirm.downcase == 'y'
+            else
+                system "cp #{@repo_path}/latex_hw_template.tex #{@filename}"
+            end
+        elsif !@course
+            filename = ask("What would you like to name this latex file?")
+            @filename = parse_filename(filename)
+            system "cp #{@repo_path}/latex_hw_template.tex #{@filename}"
+        end
+        if args[:course]
+            @course = args[:course]
+        elsif !@course
+            @course = ask("What course is this assignment for?")
+        end
+        if args[:professor]
+            @professor = args[:professor]
+        elsif !@professor
+            @professor = ask("What is the name of your professor?")
+        end
+        if args[:author]
+            @author = args[:author]
+        elsif !@author
+            @author = ask("Who are you?")
+        end
+        if args[:due_date]
+            @due_date = args[:due_date]
+        elsif !@due_date
+            @due_date = ask("When is this assignment due?")
+        end
+        if args[:title]
+            @title = args[:title]
+        elsif !@title
+            @title = ask("What is the title of this assignment?")
+        end
+
+    end
+
+    def parse_filename(filename)
+      if filename.nil? or filename.empty?
+        "latex_hw_template.tex"
+      elsif (filename =~ /^*\.$/i).nil?
+        filename + "tex"
+      elsif (filename =~ /^*\.$/i).nil?
+        filename + ".tex"
+      else
+        filename
+      end
+    end
+
+    def execute
+        text = File.read(@filename)
+        new_text = text.gsub(/HOMEWORKTITLE/, @title).gsub(/DUEDATE/, @due_date).gsub(/COURSE/, @course).gsub(/PROFESSOR/, @professor).gsub(/AUTHOR/,@author)
+        File.write(@filename, new_text)
+        system "latex #{@filename}" if system "which latex"
+		    system "pdflatex #{@filename}" if system "which pdflatex"
+    end
+
+end
+
+latex_variables = LatexVariables.new(arguments)
+latex_variables.execute
