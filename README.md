@@ -7,9 +7,9 @@ I swear submitting homework formatted by latex helps me get more points when the
 
 ## Setup
 Recommended Installs:
-Install [MacTeX](https://www.latex-project.org/get/) (obviously) \n
-Install [Texmaker](http://www.xm1math.net/texmaker/) \n
-`gem install fplatex`
+| Install [MacTeX](https://www.latex-project.org/get/) (obviously)
+| Install [Texmaker](http://www.xm1math.net/texmaker/)
+| `gem install fplatex`
 
 ## Usage
 ```
