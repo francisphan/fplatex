@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name        = 'fplatex'
-  s.version     = '0.0.2'
+  s.version     = '0.0.3'
   s.date        = '2017-02-17'
   s.summary     = "Latex Report template"
   s.description = "Speed up work flow of writing reports"
