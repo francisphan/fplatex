@@ -31,7 +31,7 @@ class ScriptArguments < Hash
                 self[:professor] = professor
             end
 
-            opts.on('-f FILENAME', '--filename', 'Desired filename of latex file, appends \'.tex\' to whatever the input is') do |filename|
+            opts.on('-f FILENAME', '--filename', 'Desired filename of latex file, will append \'.tex\' if not already put. Uses relative paths.') do |filename|
                 self[:filename] = filename
             end
 
@@ -43,10 +43,6 @@ class ScriptArguments < Hash
             opts.on('-e PRESET', '--environment',
                     'After choosing a yaml file, you must choose a preset set of variables. This is so you should only need one yaml file with all your variables and presets. Variables passed by flags override arguments from yaml file.') do |preset|
               self[:preset] = preset
-            end
-
-            opts.on('-b', '--build-executable', 'Will create symlink for this file to /usr/bin so you can use script from any location. If this flag is passed, all other flags are ignored.') do
-              self[:build] = true
             end
 
             opts.on('-h', '--help', 'Display this help and exit') do
@@ -64,12 +60,12 @@ arguments = ScriptArguments.new(ARGV)
 
 class LatexVariables
     def initialize(args)
-        @repo_path = File.dirnam(File.dirname((File.symlink?(__FILE__) ? File.readlink(__FILE__) : File.absolute_path(__FILE__))))
-        if args[:build] && !(system "which fplatex")
-          system "ln -s #{@repo_path}/fplatex /usr/local/bin/fplatex"
+        @template_path = `gem which latex_hw_template.tex`
+        if @template_path.empty?
+          puts "Can't find the latex template from the gem path, consider uninstalling and reinstalling"
           exit
         end
-        if args[:yaml_file]
+        if args[:yaml_file] and File.exists?(args[:yaml_file])
           config = YAML.load(File.new(args[:yaml_file]))
           if args[:preset].nil? or config[args[:preset]].nil?
             puts "If you're trying to use a YAML file to load variables you need to pass a valid preset hash as well."
@@ -90,12 +86,12 @@ class LatexVariables
                 confirm = ask("File named #{@filename} already exists, overwrite? [Y/N] ") { |yn| yn.limit = 1, yn.validate = /[yn]/i }
                 exit unless confirm.downcase == 'y'
             else
-                system "cp #{@repo_path}/lib/latex_hw_template.tex #{@filename}"
+                system "cp #{@template_path} #{@filename}"
             end
-        elsif !@course
+        elsif !@filename
             filename = ask("What would you like to name this latex file?")
             @filename = parse_filename(filename)
-            system "cp #{@repo_path}/lib/latex_hw_template.tex #{@filename}"
+            system "cp #{@template_path} #{@filename}"
         end
         if args[:course]
             @course = args[:course]
