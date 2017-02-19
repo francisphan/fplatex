@@ -2,7 +2,7 @@
 
 ## Description
 This is a project to speed up the work flow of homework.
-By using the ruby script it will setup the template of the more important fields.
+By using this command-line tool it will setup the template of the more important fields.
 I swear submitting homework formatted by latex helps me get more points when they're graded.
 
 ## Setup
@@ -13,6 +13,8 @@ Install [MacTeX](https://www.latex-project.org/get/) (obviously)
 Install [Texmaker](http://www.xm1math.net/texmaker/)
 
 `gem install fplatex`
+
+As of right now, known to work with ruby-2.2.4 and ruby-2.3.0
 
 ## Usage
 ```

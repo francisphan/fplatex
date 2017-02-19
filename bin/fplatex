@@ -2,6 +2,7 @@
 
 require 'optparse'
 require 'highline/import'
+require 'fileutils'
 require 'yaml'
 
 class ScriptArguments < Hash
@@ -61,10 +62,12 @@ arguments = ScriptArguments.new(ARGV)
 class LatexVariables
     def initialize(args)
         @template_path = `gem which latex_hw_template.tex`
+        @template_path.slice!("\n")
         if @template_path.empty?
           puts "Can't find the latex template from the gem path, consider uninstalling and reinstalling"
           exit
         end
+
         if args[:yaml_file] and File.exists?(args[:yaml_file])
           config = YAML.load(File.new(args[:yaml_file]))
           if args[:preset].nil? or config[args[:preset]].nil?
@@ -72,11 +75,11 @@ class LatexVariables
             exit
           else
             @filename = parse_filename(config[args[:preset]]['filename'])
-            @course = config[args[:preset]['course']]
-            @professor = config[args[:preset]['professor']]
-            @author = config[args[:preset]['author']]
-            @due_date = config[args[:preset]['duedate']]
-            @title = config[args[:preset]['title']]
+            @course = config[args[:preset]]['course']
+            @professor = config[args[:preset]]['professor']
+            @author = config[args[:preset]]['author']
+            @due_date = config[args[:preset]]['duedate']
+            @title = config[args[:preset]]['title']
         end
       end
 
@@ -91,7 +94,7 @@ class LatexVariables
         elsif !@filename
             filename = ask("What would you like to name this latex file?")
             @filename = parse_filename(filename)
-            system "cp #{@template_path} #{@filename}"
+            FileUtils.cp("#{@template_path}", "#{@filename}")
         end
         if args[:course]
             @course = args[:course]
@@ -123,7 +126,7 @@ class LatexVariables
 
     def parse_filename(filename)
       if filename.nil? or filename.empty?
-        "latex_hw_template.tex"
+        nil
       elsif (filename =~ /^*\.$/i).nil?
         filename + ".tex"
       elsif (filename =~ /^*\.$/i)
