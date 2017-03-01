@@ -138,7 +138,7 @@ class LatexVariables
 
     def execute
         text = File.read(@filename)
-        new_text = text.gsub(/HOMEWORKTITLE/, @title).gsub(/DUEDATE/, @due_date).gsub(/COURSE/, @course).gsub(/PROFESSOR/, @professor).gsub(/AUTHOR/,@author)
+        new_text = text.gsub(/HOMEWORKTITLE/, @title).gsub(/DUEDATE/, @due_date).gsub(/COURSE/, @course).gsub(/PROFESSOR/, @professor).gsub(/AUTHOR/,@author).gsub(/GRAPHICSPATH/, Dir.pwd)
         File.write(@filename, new_text)
         system "latex #{@filename}" if system "which latex"
 		    system "pdflatex #{@filename}" if system "which pdflatex"
